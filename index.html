@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Teste de Identidade Financeira no Reino</title>
+  <style>
+    :root{
+      --bg:#f5f0e5;--paper:#fffdf7;--ink:#292d29;--muted:#69716a;--green:#dce8dc;--accent:#527a68;--line:#d8ddd3
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+    .wrap{max-width:920px;margin:auto;padding:24px 16px 60px}
+    .hero{background:var(--green);padding:clamp(24px,5vw,48px);border-radius:22px;position:relative;overflow:hidden}
+    .eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.76rem;font-weight:800;color:var(--accent)}
+    h1{font-size:clamp(2rem,6vw,3.4rem);line-height:1.02;margin:12px 0 16px;max-width:700px}
+    .hero p{max-width:690px;color:#424d44}
+    .pill{display:inline-block;background:#fffdf7;border:1px solid #c9d7ca;border-radius:999px;padding:7px 12px;font-size:.85rem;font-weight:700;margin:4px 5px 0 0}
+    .panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:18px}
+    .panel h2{font-size:1.3rem;margin:0 0 8px}
+    .muted{color:var(--muted)}
+    .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}
+    .scale div{background:#f0f2ec;border-radius:12px;text-align:center;padding:10px 4px;font-size:.85rem}
+    .scale b{display:block;font-size:1.15rem}
+    .progressbox{position:sticky;top:0;z-index:5;background:rgba(245,240,229,.95);backdrop-filter:blur(8px);padding:10px 0}
+    .progressrow{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);margin-bottom:6px}
+    .track{height:7px;background:#dfe3da;border-radius:20px;overflow:hidden}
+    .bar{height:100%;width:0;background:var(--accent);transition:width .2s}
+    .q{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+    .qhead{display:flex;gap:10px;align-items:flex-start}
+    .num{flex:0 0 34px;height:34px;border-radius:10px;background:var(--green);display:grid;place-items:center;font-weight:800;color:#365744}
+    .statement{font-weight:650;padding-top:3px}
+    .choices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:16px}
+    .choice{position:relative}
+    .choice input{position:absolute;opacity:0;pointer-events:none}
+    .choice label{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:62px;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:white;transition:.15s}
+    .choice label b{font-size:1.1rem}
+    .choice label span{font-size:.67rem;color:var(--muted);text-align:center}
+    .choice input:checked+label{background:#e0ebdf;border:2px solid var(--accent);color:#254b36}
+    .choice input:focus-visible+label{outline:3px solid #b9c9f3}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .btn{border:0;border-radius:12px;padding:13px 18px;font:inherit;font-weight:750;cursor:pointer}
+    .primary{background:var(--accent);color:white}
+    .secondary{background:#e9ece5;color:var(--ink)}
+    .error{display:none;background:#fff0e8;color:#873e24;border:1px solid #efc2ad;border-radius:12px;padding:12px;margin-top:12px}
+    .results{display:none}
+    .resultgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+    .profile{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff}
+    .profiletop{display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .profile h3{margin:0;font-size:1.02rem}
+    .score{font-size:1.35rem;font-weight:850;white-space:nowrap}
+    .meter{height:9px;background:#eceee8;border-radius:20px;overflow:hidden;margin:12px 0 8px}
+    .meter span{display:block;height:100%;border-radius:20px}
+    .intensity{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+    .dominant{border:2px solid var(--accent);background:#f5faf3}
+    .callout{background:#edf3e9;border-radius:14px;padding:18px;margin-top:18px}
+    .note{font-size:.88rem;color:var(--muted)}
+    .scripture{font-size:1.15rem;font-weight:750}
+    .hidden{display:none}
+    @media(max-width:600px){
+      .wrap{padding:12px 10px 40px}
+      .panel{padding:16px}
+      .q{padding:14px}
+      .choices{gap:5px}
+      .choice label{min-height:58px;border-radius:9px}
+      .choice label span{font-size:.58rem}
+      .resultgrid{grid-template-columns:1fr}
+      .scale{gap:4px}
+      .scale div{font-size:.7rem;padding:8px 2px}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="eyebrow">Economia do Reino · Autoexame</div>
+      <h1>Teste de Identidade Financeira no Reino</h1>
+      <p>Descubra quais tendências aparecem com mais força na maneira como você lida com recursos, generosidade, administração, transformação social e renúncia.</p>
+      <span class="pill">20 sentenças</span>
+      <span class="pill">4 perfis</span>
+      <span class="pill">5 a 25 pontos por perfil</span>
+    </header>
+
+    <section class="panel">
+      <h2>Como responder</h2>
+      <p>Leia cada sentença e escolha uma nota de <b>1 a 5</b>, considerando sua prática habitual real — não como você gostaria de agir.</p>
+      <div class="scale">
+        <div><b>1</b>Discordo totalmente</div>
+        <div><b>2</b>Discordo</div>
+        <div><b>3</b>Neutro / às vezes</div>
+        <div><b>4</b>Concordo</div>
+        <div><b>5</b>Concordo plenamente</div>
+      </div>
+      <p class="note">Responda às 20 questões. O resultado será calculado automaticamente e mostrará seu perfil dominante e o secundário.</p>
+    </section>
+
+    <div class="progressbox">
+      <div class="progressrow">
+        <span id="progressText">0 de 20 respondidas</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="track"><div class="bar" id="progressBar"></div></div>
+    </div>
+
+    <form id="quiz">
+      <div id="questions">
+        <section class="q" id="q1">
+          <div class="qhead"><div class="num">1</div><div class="statement">Sinto enorme alegria e satisfação ao financiar anonimamente projetos da igreja, missionários ou pessoas em necessidade.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q1v1" name="q1" value="1"><label for="q1v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q1v2" name="q1" value="2"><label for="q1v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q1v3" name="q1" value="3"><label for="q1v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q1v4" name="q1" value="4"><label for="q1v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q1v5" name="q1" value="5"><label for="q1v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q2">
+          <div class="qhead"><div class="num">2</div><div class="statement">Mantenho um estilo de vida simples e contido, evitando o consumismo e priorizando o zelo contra qualquer desperdício.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q2v1" name="q2" value="1"><label for="q2v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q2v2" name="q2" value="2"><label for="q2v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q2v3" name="q2" value="3"><label for="q2v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q2v4" name="q2" value="4"><label for="q2v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q2v5" name="q2" value="5"><label for="q2v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q3">
+          <div class="qhead"><div class="num">3</div><div class="statement">Sinto forte indignação diante de injustiças sociais e busco usar minha influência ou dinheiro para socorrer os necessitados e reformar a sociedade.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q3v1" name="q3" value="1"><label for="q3v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q3v2" name="q3" value="2"><label for="q3v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q3v3" name="q3" value="3"><label for="q3v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q3v4" name="q3" value="4"><label for="q3v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q3v5" name="q3" value="5"><label for="q3v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q4">
+          <div class="qhead"><div class="num">4</div><div class="statement">Estou disposto a renunciar ao conforto material e à estabilidade financeira se isso for necessário para cumprir um chamado de fé.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q4v1" name="q4" value="1"><label for="q4v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q4v2" name="q4" value="2"><label for="q4v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q4v3" name="q4" value="3"><label for="q4v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q4v4" name="q4" value="4"><label for="q4v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q4v5" name="q4" value="5"><label for="q4v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q5">
+          <div class="qhead"><div class="num">5</div><div class="statement">Quando recebo uma renda extra, meu primeiro pensamento é em como posso ofertar ou impulsionar a obra de Deus com esses recursos.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q5v1" name="q5" value="1"><label for="q5v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q5v2" name="q5" value="2"><label for="q5v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q5v3" name="q5" value="3"><label for="q5v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q5v4" name="q5" value="4"><label for="q5v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q5v5" name="q5" value="5"><label for="q5v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q6">
+          <div class="qhead"><div class="num">6</div><div class="statement">Tenho o hábito de registrar minhas contas e prezar por uma rotina financeira metódica e organizada.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q6v1" name="q6" value="1"><label for="q6v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q6v2" name="q6" value="2"><label for="q6v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q6v3" name="q6" value="3"><label for="q6v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q6v4" name="q6" value="4"><label for="q6v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q6v5" name="q6" value="5"><label for="q6v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q7">
+          <div class="qhead"><div class="num">7</div><div class="statement">Acredito que os recursos materiais devem ser usados como ferramenta para combater a pobreza e trazer dignidade e equidade social.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q7v1" name="q7" value="1"><label for="q7v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q7v2" name="q7" value="2"><label for="q7v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q7v3" name="q7" value="3"><label for="q7v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q7v4" name="q7" value="4"><label for="q7v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q7v5" name="q7" value="5"><label for="q7v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q8">
+          <div class="qhead"><div class="num">8</div><div class="statement">Prefiro viver uma vida de dependência diária da fé e provisão de Deus a depender do acúmulo de garantias financeiras humanas.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q8v1" name="q8" value="1"><label for="q8v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q8v2" name="q8" value="2"><label for="q8v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q8v3" name="q8" value="3"><label for="q8v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q8v4" name="q8" value="4"><label for="q8v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q8v5" name="q8" value="5"><label for="q8v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q9">
+          <div class="qhead"><div class="num">9</div><div class="statement">Prefiro que minhas doações e apoio financeiro permaneçam em segredo, sem qualquer busca por reconhecimento público.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q9v1" name="q9" value="1"><label for="q9v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q9v2" name="q9" value="2"><label for="q9v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q9v3" name="q9" value="3"><label for="q9v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q9v4" name="q9" value="4"><label for="q9v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q9v5" name="q9" value="5"><label for="q9v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q10">
+          <div class="qhead"><div class="num">10</div><div class="statement">Valorizo muito a estabilidade, a criação de reservas e a prevenção de riscos no orçamento familiar.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q10v1" name="q10" value="1"><label for="q10v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q10v2" name="q10" value="2"><label for="q10v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q10v3" name="q10" value="3"><label for="q10v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q10v4" name="q10" value="4"><label for="q10v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q10v5" name="q10" value="5"><label for="q10v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q11">
+          <div class="qhead"><div class="num">11</div><div class="statement">Costumo investir tempo ou dinheiro em projetos sociais, ONGs ou iniciativas que transformam a realidade da comunidade.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q11v1" name="q11" value="1"><label for="q11v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q11v2" name="q11" value="2"><label for="q11v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q11v3" name="q11" value="3"><label for="q11v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q11v4" name="q11" value="4"><label for="q11v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q11v5" name="q11" value="5"><label for="q11v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q12">
+          <div class="qhead"><div class="num">12</div><div class="statement">Abro mão facilmente de bens pessoais se perceber que outra pessoa necessita mais daquele recurso do que eu.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q12v1" name="q12" value="1"><label for="q12v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q12v2" name="q12" value="2"><label for="q12v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q12v3" name="q12" value="3"><label for="q12v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q12v4" name="q12" value="4"><label for="q12v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q12v5" name="q12" value="5"><label for="q12v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q13">
+          <div class="qhead"><div class="num">13</div><div class="statement">Enxergo o dinheiro prioritariamente como uma semente para gerar impacto espiritual e expandir o Reino de Deus.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q13v1" name="q13" value="1"><label for="q13v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q13v2" name="q13" value="2"><label for="q13v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q13v3" name="q13" value="3"><label for="q13v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q13v4" name="q13" value="4"><label for="q13v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q13v5" name="q13" value="5"><label for="q13v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q14">
+          <div class="qhead"><div class="num">14</div><div class="statement">Acredito que gerir o orçamento com rigor e excelência é uma forma direta de adoração e obediência a Deus.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q14v1" name="q14" value="1"><label for="q14v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q14v2" name="q14" value="2"><label for="q14v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q14v3" name="q14" value="3"><label for="q14v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q14v4" name="q14" value="4"><label for="q14v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q14v5" name="q14" value="5"><label for="q14v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q15">
+          <div class="qhead"><div class="num">15</div><div class="statement">Mobilizo pessoas, redes de contato e recursos para causas sociais e ações de impacto comunitário.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q15v1" name="q15" value="1"><label for="q15v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q15v2" name="q15" value="2"><label for="q15v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q15v3" name="q15" value="3"><label for="q15v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q15v4" name="q15" value="4"><label for="q15v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q15v5" name="q15" value="5"><label for="q15v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q16">
+          <div class="qhead"><div class="num">16</div><div class="statement">Priorizo o serviço voluntário, a entrega e a dedicação às pessoas, mesmo que isso signifique ter uma renda menor.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q16v1" name="q16" value="1"><label for="q16v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q16v2" name="q16" value="2"><label for="q16v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q16v3" name="q16" value="3"><label for="q16v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q16v4" name="q16" value="4"><label for="q16v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q16v5" name="q16" value="5"><label for="q16v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q17">
+          <div class="qhead"><div class="num">17</div><div class="statement">Sinto prazer em viabilizar financeiramente os projetos, chamados e sonhos ministeriais de outras pessoas.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q17v1" name="q17" value="1"><label for="q17v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q17v2" name="q17" value="2"><label for="q17v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q17v3" name="q17" value="3"><label for="q17v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q17v4" name="q17" value="4"><label for="q17v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q17v5" name="q17" value="5"><label for="q17v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q18">
+          <div class="qhead"><div class="num">18</div><div class="statement">Prefiro poupar com disciplina e viver abaixo dos meus meios a ter um padrão de vida ostentoso ou arriscado.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q18v1" name="q18" value="1"><label for="q18v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q18v2" name="q18" value="2"><label for="q18v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q18v3" name="q18" value="3"><label for="q18v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q18v4" name="q18" value="4"><label for="q18v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q18v5" name="q18" value="5"><label for="q18v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q19">
+          <div class="qhead"><div class="num">19</div><div class="statement">Vejo o dinheiro e a influência como alavancas bíblicas para mudar leis injustas e proteger os vulneráveis (órfão, viúva e estrangeiro).</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q19v1" name="q19" value="1"><label for="q19v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q19v2" name="q19" value="2"><label for="q19v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q19v3" name="q19" value="3"><label for="q19v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q19v4" name="q19" value="4"><label for="q19v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q19v5" name="q19" value="5"><label for="q19v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+
+        <section class="q" id="q20">
+          <div class="qhead"><div class="num">20</div><div class="statement">Sinto que a verdadeira riqueza está em entregar minha vida e recursos em adoração sacrificial e desapegada a Cristo.</div></div>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="q20v1" name="q20" value="1"><label for="q20v1"><b>1</b><span>Discordo totalmente</span></label></div>
+            <div class="choice"><input type="radio" id="q20v2" name="q20" value="2"><label for="q20v2"><b>2</b><span>Discordo</span></label></div>
+            <div class="choice"><input type="radio" id="q20v3" name="q20" value="3"><label for="q20v3"><b>3</b><span>Neutro / às vezes</span></label></div>
+            <div class="choice"><input type="radio" id="q20v4" name="q20" value="4"><label for="q20v4"><b>4</b><span>Concordo</span></label></div>
+            <div class="choice"><input type="radio" id="q20v5" name="q20" value="5"><label for="q20v5"><b>5</b><span>Concordo plenamente</span></label></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="error" id="error" role="alert">Responda às 20 sentenças antes de calcular o resultado. As questões não respondidas estão destacadas.</div>
+
+      <div class="actions">
+        <button class="btn primary" type="submit">Calcular meu perfil</button>
+        <button class="btn secondary" type="button" id="reset">Recomeçar</button>
+      </div>
+    </form>
+
+    <section class="panel results" id="results" aria-live="polite">
+      <div class="eyebrow">Seu resultado</div>
+      <h2 id="resultTitle">Seus perfis</h2>
+      <p class="muted" id="resultIntro"></p>
+      <div class="resultgrid" id="resultGrid"></div>
+      <div class="callout" id="dominantText"></div>
+
+      <div class="panel" style="padding:16px;margin-top:16px">
+        <h2>Como interpretar</h2>
+        <p>O perfil com maior pontuação é sua tendência dominante neste questionário; a segunda maior pontuação é o perfil secundário. Empates indicam tendências igualmente fortes. A pontuação mostra afinidades com as sentenças, não mede maturidade espiritual nem define toda a sua identidade.</p>
+        <p class="note">Este material é uma ferramenta de reflexão para uso educativo. Não é um instrumento psicológico validado. Os exemplos históricos e bíblicos apresentados são os do material-base e não significam que essas pessoas se encaixem perfeitamente em uma categoria.</p>
+      </div>
+
+      <div class="callout">
+        <div class="scripture">“Tudo quanto fizerdes, fazei-o de todo o coração, como ao Senhor...”</div>
+        <div class="muted">Colossenses 3:23</div>
+        <p>Use o resultado como ponto de partida para refletir sobre como seus dons e recursos podem servir a Deus e ao próximo.</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" type="button" id="print">Imprimir resultado</button>
+        <button class="btn secondary" type="button" id="edit">Revisar respostas</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const profiles={
+      DOADOR:{name:'Doador',gift:'Dom da contribuição',desc:'Seu foco espiritual está em gerar e direcionar recursos para financiar o Reino. Você se alegra na generosidade secreta e em viabilizar projetos de Deus.',examples:'William Colgate e Joana de Cuza',color:'#d97745'},
+      MODERADO:{name:'Moderado',gift:'Dom da administração',desc:'Seu foco está na preservação, ordem e boa mordomia. Você evita desperdícios e contribui para que a casa e a igreja tenham uma gestão sólida.',examples:'Timóteo e John Wesley',color:'#527a68'},
+      TRANSFORMADOR:{name:'Transformador',gift:'Misericórdia / liderança',desc:'Seu foco é usar recursos e influência para promover a justiça social, transformar realidades comunitárias e socorrer os vulneráveis.',examples:'Apóstolo Paulo e William Wilberforce',color:'#5b75a5'},
+      ABNEGADO:{name:'Abnegado',gift:'Serviço / renúncia',desc:'Seu foco está no desapego e na dependência da fé. Você prioriza o serviço direto e o amor a Cristo acima do conforto material.',examples:'Maria de Betânia',color:'#8a6b9d'}
+    };
+
+    const groups={DOADOR:[1,5,9,13,17],MODERADO:[2,6,10,14,18],TRANSFORMADOR:[3,7,11,15,19],ABNEGADO:[4,8,12,16,20]};
+    const form=document.getElementById('quiz'), error=document.getElementById('error'), results=document.getElementById('results');
+
+    function updateProgress(){
+      let count=0;
+      for(let n=1;n<=20;n++) if(form.querySelector('input[name="q'+n+'"]:checked')) count++;
+      document.getElementById('progressText').textContent=count+' de 20 respondidas';
+      document.getElementById('progressPct').textContent=Math.round(count/20*100)+'%';
+      document.getElementById('progressBar').style.width=(count/20*100)+'%';
+    }
+
+    form.addEventListener('change',e=>{
+      if(e.target.matches('input[type=radio]')){
+        document.getElementById('q'+e.target.name.slice(1)).style.borderColor='';
+        updateProgress();
+      }
+    });
+
+    form.addEventListener('submit',e=>{
+      e.preventDefault();
+      let missing=[];
+      for(let n=1;n<=20;n++){
+        if(!form.querySelector('input[name="q'+n+'"]:checked')) missing.push(n);
+      }
+      if(missing.length){
+        error.style.display='block';
+        missing.forEach(n=>document.getElementById('q'+n).style.borderColor='#d46b4e');
+        document.getElementById('q'+missing[0]).scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
+      error.style.display='none';
+      const scores={};
+      for(const [key,nums] of Object.entries(groups))
+        scores[key]=nums.reduce((sum,n)=>sum+Number(form.querySelector('input[name="q'+n+'"]:checked').value),0);
+
+      const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+      const max=sorted[0][1], second=sorted[1][1];
+      const dominant=sorted.filter(x=>x[1]===max);
+      const secondary=sorted.filter(x=>x[1]===second&&x[1]!==max);
+
+      document.getElementById('resultTitle').textContent=dominant.length>1?'Você tem perfis empatados': 'Seu perfil dominante: '+profiles[dominant[0][0]].name;
+      document.getElementById('resultIntro').textContent='As pontuações variam de 5 a 25 por perfil. Compare as quatro tendências sem tratar uma delas como superior às outras.';
+
+      const grid=document.getElementById('resultGrid');
+      grid.innerHTML='';
+      for(const [key,score] of sorted){
+        const p=profiles[key];
+        const intensity=score<=11?'Baixa':score<=18?'Média':'Alta';
+        const card=document.createElement('article');
+        card.className='profile'+(score===max?' dominant':'');
+        card.innerHTML='<div class="profiletop"><h3>'+p.name+'</h3><div class="score">'+score+'<span class="muted" style="font-size:.8rem">/25</span></div></div><div class="meter"><span style="width:'+(score/25*100)+'%;background:'+p.color+'"></span></div><div class="intensity" style="color:'+p.color+'">Intensidade '+intensity+'</div><p class="muted" style="font-size:.85rem;margin-bottom:0">'+p.gift+'</p>'+(score===max?'<p style="font-size:.78rem;font-weight:800;margin-bottom:0">'+(dominant.length>1?'Perfil empatado no topo':'Perfil dominante')+'</p>':'');
+        grid.appendChild(card);
+      }
+
+      let desc='';
+      if(dominant.length===1){
+        const p=profiles[dominant[0][0]];
+        desc='<h2>Seu ponto de partida: '+p.name+'</h2><p>'+p.desc+'</p><p><b>Referências do material:</b> '+p.examples+'.</p>';
+        if(secondary.length){
+          const s=profiles[secondary[0][0]];
+          desc+='<p><b>Perfil secundário:</b> '+s.name+' — '+s.gift+'.</p>';
+        }
+      } else {
+        desc='<h2>Seus perfis mais fortes estão empatados</h2><p>'+dominant.map(x=>profiles[x[0]].name).join(' e ')+' aparecem com a mesma pontuação. Isso pode indicar uma combinação de tendências; leia as descrições e reflita sobre como elas se manifestam na prática.</p>';
+      }
+
+      document.getElementById('dominantText').innerHTML=desc;
+      results.style.display='block';
+      results.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+
+    document.getElementById('reset').addEventListener('click',()=>{
+      form.reset();
+      results.style.display='none';
+      error.style.display='none';
+      for(let n=1;n<=20;n++) document.getElementById('q'+n).style.borderColor='';
+      updateProgress();
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+    document.getElementById('edit').addEventListener('click',()=>{
+      document.getElementById('questions').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+
+    document.getElementById('print').addEventListener('click',()=>window.print());
+    updateProgress();
+  </script>
+</body>
+</html>
